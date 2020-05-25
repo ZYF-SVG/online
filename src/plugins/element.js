@@ -25,7 +25,8 @@ import {
   Switch,
   Tooltip,
   Pagination,
-  Dialog
+  Dialog,
+  MessageBox
 } from 'element-ui';
 
 Vue.use(Button);
@@ -52,3 +53,4 @@ Vue.use(Tooltip);
 Vue.use(Pagination);
 Vue.use(Dialog);
 Vue.prototype.$message = Message;   // 全局配置 弹框提示，就可以用 this.$message 来使用弹框提示了。
+Vue.prototype.$confirm = MessageBox.confirm;
