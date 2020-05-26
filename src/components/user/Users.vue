@@ -38,8 +38,11 @@
         <el-table-column label="操作">
           <template v-slot:default="slotProps">
             <!-- {{ slotProps.row }} -->
+            <!-- 修改 -->
             <el-button type="primary" @click="modify(slotProps.row.id)" icon="el-icon-edit" plain size="mini"></el-button>
+            <!-- 刪除 -->
             <el-button type="danger" @click="removeUser(slotProps.row.id, slotProps.row.username)" icon="el-icon-delete" plain size="mini"></el-button>
+            <!-- 添加角色 -->
             <el-tooltip effect="dark" content="分配角色" placement="top-end" :enterable="false">
               <el-button type="warning" icon="el-icon-setting" plain size="mini"></el-button>
             </el-tooltip>
@@ -307,7 +310,7 @@ export default {
       this.$message.success('删除用户 '+ username +' 成功');
        //console.log(data);  点击确定输出 confirm
     }
-  }
+  } 
 };
 </script>
 
