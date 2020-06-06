@@ -20,7 +20,7 @@
         <el-table-column type="expand">
           <!-- 使用作用域插槽获取每列的数据 -->
           <template v-slot:default="slotProps">
-            <pre>{{ slotProps.row }}</pre>
+            <!-- <pre>{{ slotProps.row }}</pre> -->
             <!-- 权限的等级，放在 栅格系统中，一级占 5 列，二三占 19 列 -->
             <el-row v-for="(item1, i1) in slotProps.row.children" :key="item1.id"  :class="['bbottom', i1 === 0 ? 'btop' : '', 'flexcenter']">
               <!-- 一级 -->
@@ -99,20 +99,20 @@
       </span>
     </el-dialog>
 
-    <!-- 分配权限对话框 -->
-    <el-dialog title="分配权限" :visible.sync="setRolesDialogVisible" width="50%">
+    <!-- 修改权限对话框 -->
+    <el-dialog title="分配权限" :visible.sync="updateRolesDialogVisible" width="50%">
       <!-- 所有权限列表  props 加载规则-->
       <el-tree :data="rightList" :props="treeProps" node-key="id" 
-      show-checkbox default-expand-all :default-checked-keys="defkey">
+      show-checkbox default-expand-all :default-checked-keys="defkey" ref="treeRef">
       </el-tree>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="setRolesDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="setRolesDialogVisible = false">确 定</el-button>
+        <el-button @click="updateRolesDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="updatePermissions">确 定</el-button>
       </span>
     </el-dialog>
 
   </div>
-  <!-- 223 -->
+  <!-- 235 -->
 </template>
 
 <script>
@@ -141,8 +141,8 @@ export default {
       getRolesDialogVisible: false,
       // 存储修改对话框查取的数据
       getList: {},
-      // 分配权限 对话框的状态
-      setRolesDialogVisible: false,
+      // 修改权限 对话框的状态
+      updateRolesDialogVisible: false,
       // 存储所有权限的列表
       rightList: [],
       // tree 控件的属性
@@ -151,7 +151,9 @@ export default {
         children: 'children'
       },
       // 存储每个 角色权限 id
-      defkey: []
+      defkey: [],
+      // 存储当前点击修改权限按钮的id
+      idStr: ''
     }
   },
   created() {
@@ -165,7 +167,6 @@ export default {
         return this.$message.error('獲取角色列表失敗');
       }
       this.rolesList = res.data;
-      console.log(this.rolesList);
     },
     // 點擊 添加角色 按鈕觸發
     appear() {
@@ -269,9 +270,11 @@ export default {
       this.rightList = res.data;
 
       // 循环到第三场权限，拿到第三级权限的 id, 所用 forEach 是 数组用的
-     this.fordate(itemcon, this.defkey);
+      this.fordate(itemcon, this.defkey);
 
-      this.setRolesDialogVisible = true;
+      // 存储当前点击修改权限的 id
+      this.idStr = itemcon.id;
+      this.updateRolesDialogVisible = true;
     },
     // 循环，点前点击 修改权限 的角色，获取他们的第三级 权限的id
     fordate(node, arr) {
@@ -282,6 +285,25 @@ export default {
         // console.log(item);
         this.fordate(item, arr);
       })
+    },
+    // 点击确定 发起 修改角色权限
+    async updatePermissions() {
+      // 当前勾选的权限的id, 使用 展开运算符 合并数组
+      const keys = [
+        ...this.$refs.treeRef.getHalfCheckedKeys(), 
+        ...this.$refs.treeRef.getCheckedKeys()
+        ];
+      // 在转换为字符串
+      const keyStr = keys.join(',');
+      const { data : res } = await this.$http.post('roles/'+ this.idStr +'/rights', { rids: keyStr })
+
+      if (res.meta.status !== 200) {
+        return this.$message.error('修改权限失败');
+      }
+
+      this.$message.success('修改权限成功');
+      this.updateRolesDialogVisible = false;
+      this.getRolesList();
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="usersContent">
     <!-- 面包屑導航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
@@ -44,7 +44,7 @@
             <el-button type="danger" @click="removeUser(slotProps.row.id, slotProps.row.username)" icon="el-icon-delete" plain size="mini"></el-button>
             <!-- 添加角色 -->
             <el-tooltip effect="dark" content="分配角色" placement="top-end" :enterable="false">
-              <el-button type="warning" icon="el-icon-setting" plain size="mini"></el-button>
+              <el-button type="warning" icon="el-icon-setting" plain size="mini" @click="setRole(slotProps.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -61,7 +61,7 @@
         </el-pagination>
     </el-card>
 
-    <!-- 添加用户框 -->
+    <!-- 添加用户对话框 -->
     <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%" @close="resetForm">
       <!-- 内容 -->
       <el-form :model="addForm" :rules="userRules" ref="ruleFormRef" label-width="70px">
@@ -85,7 +85,7 @@
       </span>
     </el-dialog>
 
-    <!-- 修改用户信息框 -->
+    <!-- 修改用户对话框 -->
     <el-dialog title="修改用户信息" :visible.sync="modifyDialogVisible" width="50%" @close="modifClear">
       <!-- 表单 -->
       <el-form :model="modifyForm" :rules="userRules" ref="modifyFormRef" label-width="70px">
@@ -105,7 +105,24 @@
       </span>
     </el-dialog>
 
-    <!-- 删除用户弹框 -->
+    <!-- 分配角色对话框 -->
+    <el-dialog  title="分配新角色"  :visible.sync="setRoleDialogVisible"  width="50%" @close="setRoleClear">
+      <div class="dialogDiv">
+        <p>当前的用户： {{ userinfo.username }} </p>
+        <p>当前的角色： {{ userinfo.role_name }} </p>
+        <p>分配新角色：
+          <!-- 下拉框 -->
+          <el-select v-model="selectedRoleId" placeholder="请选择">
+            <el-option v-for="item in rolesList"  :key="item.id" :label="item.roleName" :value="item.id">
+            </el-option>
+          </el-select>
+        </p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRoleDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
+      </span>
+  </el-dialog>
 
 <!-- 213 -->
   </div>
@@ -144,9 +161,9 @@ export default {
       userlist: [],
       // 總條數
       total: 0,
-      // 添加用户框 是否显示
+      // 添加用户对话框 是否显示
       addDialogVisible: false,
-      // 修改用户信息框 是否显示
+      // 修改用户对话框 是否显示
       modifyDialogVisible: false,
       //  存储添加用户的 数据
       addForm: {
@@ -175,7 +192,15 @@ export default {
         ]
       },
       // 存储修改数据的对象
-      modifyForm: {}
+      modifyForm: {},
+      // 分配角色对话框 是否显示
+      setRoleDialogVisible: false,
+      // 当前分配角色用户的信息
+      userinfo: {},
+      // 存储角色列表
+      rolesList: {},
+      // 存储选取的角色id
+      selectedRoleId: ''
     }
   },
   created() {
@@ -309,6 +334,41 @@ export default {
       this.getUserList();
       this.$message.success('删除用户 '+ username +' 成功');
        //console.log(data);  点击确定输出 confirm
+    },
+    // 点击分配角色按钮触发
+    async setRole(data) {
+      // 获取当前用户的信息
+      this.userinfo = data;
+      // 获取所有角色列表
+      const { data : res } = await this.$http.get('roles');
+      if (res.meta.status !== 200) {
+        this.$message.error('获取角色列表失败');
+      }
+      // 存储到 角色列表 中
+      this.rolesList = res.data;
+      this.setRoleDialogVisible = true;
+    },
+    // 发起 分配用户角色 请求
+    async saveRoleInfo() {
+      // 判断是否选中了角色
+      if (!this.selectedRoleId) { // 如果绑定的数据为空，就
+        return this.$message.error('请选择想分配的角色!');
+      }
+
+      const { data : res } = await this.$http.put('users/'+ this.userinfo.id +'/role', { rid: this.selectedRoleId });
+
+      if (res.meta.status !== 200) {
+        return this.$message.error('分配角色失败');
+      }
+
+      this.$message.success('分配角色成功');
+      this.getUserList();
+      this.setRoleDialogVisible = false;
+    },
+    // 当 分配角色对话框 隐藏时，清空内容
+    setRoleClear() {
+      this.selectedRoleId = '';
+      this.userinfo = {};
     }
   } 
 };
@@ -321,4 +381,12 @@ export default {
     margin: 0 auto;
   }
 }
+.usersContent {
+  // 分配角色的p
+  .dialogDiv p:first-child,
+  .dialogDiv p:nth-child(2) {
+    height: 35px;
+  }
+}
+
 </style>
