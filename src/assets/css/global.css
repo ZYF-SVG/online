@@ -45,3 +45,13 @@ body,
 .el-table__body {
   width: 100% !important;
 }
+
+/* 联选择器 */
+.el-popper {
+  top: 282px !important;
+  height: 250px;
+  overflow: hidden;
+}
+.el-cascader-panel {
+  height: 100%;
+}

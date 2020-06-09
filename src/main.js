@@ -1,12 +1,15 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import './plugins/element.js'
+import Vue from 'vue';
+import App from './App.vue';
+import router from './router';
+import './plugins/element.js';
 // 引入全局 css
-import './assets/css/global.css'
+import './assets/css/global.css';
 // 导入字体图标
 import './assets/fonts/iconfont.css';
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+// 导入依赖 tree
+import treeTable from 'vue-table-with-tree-grid';
+
 
 // 使用 axios 进行 http 请求
 import axios from 'axios';
@@ -19,6 +22,8 @@ axios.interceptors.request.use( config => {
   config.headers.Authorization = window.sessionStorage.getItem('token');
   return config;
 })
+
+Vue.component('tree-table', treeTable);
 
 Vue.prototype.$http = axios;
 
