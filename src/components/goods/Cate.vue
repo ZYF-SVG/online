@@ -28,8 +28,8 @@
         </template>
         <!-- 操作列 -->
         <template v-slot:operation="slopProps">
-           <el-button type="primary" size="small" plain icon="el-icon-edit">编辑</el-button>
-           <el-button type="danger" size="small" plain icon="el-icon-delete">删除</el-button>
+           <el-button type="primary" size="small" plain icon="el-icon-edit" @click="modifyCate(slopProps.row.cat_id)">编辑</el-button>
+           <el-button type="danger" size="small" plain icon="el-icon-delete" @click="deleteCate(slopProps.row.cat_id)">删除</el-button>
         </template>
       </tree-table>
 
@@ -57,6 +57,23 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="addCateDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addCateRequest">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 编辑对话框 -->
+    <el-dialog
+      title="编辑商品"
+      :visible.sync="modifyDialogVisible"
+      width="50%">
+      <!-- 表单 -->
+      <el-form ref="modifyFormRef" :model="selectCateId" label-width="80px">
+        <el-form-item label="分类名称">
+          <el-input v-model="selectCateId.cat_name"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="modifyDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="modifyCateImg">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 250 -->
@@ -120,7 +137,11 @@ export default {
       // 存储 1，2级商品的数据
       cateDate: [],
       // 存储联选择器 选取的值
-      cescaderKey: []
+      cescaderKey: [],
+      // 编辑 分类对话框 隐藏与否
+      modifyDialogVisible: false,
+      // 存储 根据id查询的分类的数据
+      selectCateId: {}
     };
   },
   created() {
@@ -210,6 +231,41 @@ export default {
         this.getGoodsList();
 
       })
+    },
+    // 删除分类
+    async deleteCate(id) {
+      const { data : res } = await this.$http.delete('categories/' + id)
+      if ( res.meta.status !== 200) {
+        return this.$message.error('删除分类失败');
+      }
+
+      this.$message.success('删除分类成功');
+      this.getGoodsList();
+    },
+    // 点击编辑按钮触发
+    async modifyCate(id) {
+      // 根据查询分类的名称
+      const { data : res } = await this.$http.get('categories/' + id);
+      if (res.meta.status !== 200) {
+        return this.$message.error('修改失败');
+      }
+
+      this.selectCateId = res.data;
+      this.modifyDialogVisible = true;
+    },
+    // 点击确定按钮，发起修改请求
+    async modifyCateImg() {
+      const { data : res } = await this.$http.put('categories/' + this.selectCateId.cat_id, {
+        cat_name: this.selectCateId.cat_name
+      })
+
+      if (res.meta.status !== 200) {
+        return this.$message.error('修改失败');
+      }
+
+      this.$message.success('修改成功');
+      this.modifyDialogVisible = false;
+      this.getGoodsList();
     }
   }
 };
