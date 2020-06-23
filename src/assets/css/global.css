@@ -48,7 +48,7 @@ body,
 
 /* 联选择器 */
 .el-popper {
-  top: 282px !important;
+  top: 282px;
   height: 250px;
   overflow: hidden;
 }
