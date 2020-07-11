@@ -220,8 +220,6 @@ export default {
     },
     // 级联选择器 选择后触发
     handleChange() {
-      console.log(this.ParamsValue);
-
       // 如果级联选择器选择的结果为 空的，那就清空2个数据
       if (this.ParamsValue.length == 0) {
         this.manyDate = [];
@@ -376,8 +374,6 @@ export default {
       row.inputVisible = false;
 
       this.setParameter(row);
-
-     
     },
     // 点击 添加标签 触发事件
     showInput(row) {
