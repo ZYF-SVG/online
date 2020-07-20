@@ -55,3 +55,8 @@ body,
 .el-cascader-panel {
   height: 100%;
 }
+
+/* 富文本编辑器 */
+.ql-editor {
+  min-height: 300px !important;
+}

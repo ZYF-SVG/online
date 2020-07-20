@@ -1,3 +1,4 @@
+<!-- 商品分类页面 -->
 <template>
   <div class="cateContent">
     <!-- 面包屑导航 -->

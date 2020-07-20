@@ -34,7 +34,12 @@ import {
   Cascader,
   Alert,
   Tabs,
-  TabPane
+  TabPane,
+  Steps,
+  Step,
+  CheckboxGroup,
+  Checkbox,
+  Upload
 } from 'element-ui';
 
 Vue.use(Button);
@@ -68,6 +73,11 @@ Vue.use(Cascader);
 Vue.use(Alert);
 Vue.use(Tabs);
 Vue.use(TabPane);
+Vue.use(Steps);
+Vue.use(Step);
+Vue.use(Checkbox);
+Vue.use(CheckboxGroup);
+Vue.use(Upload);
 
 Vue.prototype.$message = Message;   // 全局配置 弹框提示，就可以用 this.$message 来使用弹框提示了。
 Vue.prototype.$confirm = MessageBox.confirm;
