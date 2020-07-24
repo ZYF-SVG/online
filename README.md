@@ -28,15 +28,15 @@ serve 文件夹：
 
 项目展示：
 
-![登录页面](H:\javascript\Vue.js\电商后台数据管理项目\Vue-CLI\online\md\登录页面.png)
+![登录页面](.\md\登录页面.png)
 
 
 
-![登录后页面](H:\javascript\Vue.js\电商后台数据管理项目\Vue-CLI\online\md\登录后页面.png)
+![登录后页面](.\md\登录后页面.png)
 
 
 
-![用户页面](H:\javascript\Vue.js\电商后台数据管理项目\Vue-CLI\online\md\用户页面.png)
+![用户页面](.\md\用户页面.png)
 
 
 
