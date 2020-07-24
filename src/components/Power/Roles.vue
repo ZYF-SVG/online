@@ -14,7 +14,7 @@
       <!-- 按鈕 -->
       <el-button type="primary" @click="appear">添加角色</el-button>
 
-      <!-- 表格 -->
+      <!-- 表格 为什么添加了 row-key="id" 会报错-->
       <el-table :data="rolesList" border stripe>
         <!-- 展開列 -->
         <el-table-column type="expand">

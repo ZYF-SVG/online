@@ -41,7 +41,8 @@ import {
   Checkbox,
   Upload,
   Timeline,
-  TimelineItem
+  TimelineItem,
+  Image
 } from 'element-ui';
 
 Vue.use(Button);
@@ -82,6 +83,7 @@ Vue.use(CheckboxGroup);
 Vue.use(Upload);
 Vue.use(Timeline);
 Vue.use(TimelineItem);
+Vue.use(Image);
 
 Vue.prototype.$message = Message;   // 全局配置 弹框提示，就可以用 this.$message 来使用弹框提示了。
 Vue.prototype.$confirm = MessageBox.confirm;

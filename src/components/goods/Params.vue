@@ -1,3 +1,4 @@
+<!-- 分类参数页面 -->
 <template>
   <div class="paramsContent">
     <!--面包屑-->

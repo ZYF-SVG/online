@@ -55,6 +55,9 @@ body,
 .el-cascader-panel {
   height: 100%;
 }
+.el-cascader-menu__wrap {
+  height: 100% !important;
+}
 
 /* 富文本编辑器 */
 .ql-editor {
